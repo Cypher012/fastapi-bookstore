@@ -1,0 +1,44 @@
+# Virtual environments
+venv/
+env/
+
+# Bytecode and cache files
+__pycache__/
+*.py[cod]
+*.so
+
+# Logs and databases
+*.log
+*.sqlite3
+*.db
+
+# Configurations and environment files
+.env
+*.ini
+*.cfg
+*.toml
+
+# Compiled files
+*.o
+*.pyc
+*.pyo
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VS Code settings (if using VS Code)
+.vscode/
+
+# JetBrains IDE settings (if using PyCharm)
+.idea/
+
+# macOS system files
+.DS_Store
+
+# Node.js dependencies (if using JS in the project)
+node_modules/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
