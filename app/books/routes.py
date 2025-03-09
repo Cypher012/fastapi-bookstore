@@ -5,11 +5,11 @@ from app.books.service import BookService
 from app.books.schemas import BookCreateModel, BookUpdateModel  
 from sqlmodel.ext.asyncio.session import AsyncSession
 from typing import List, Annotated
-from app.auth.dependencies import AcessTokenBearer
+from app.auth.dependencies import AccessTokenBearer
 
 book_router = APIRouter()
 book_service = BookService()
-access_token_bearer = AcessTokenBearer()
+access_token_bearer = AccessTokenBearer()
 
 
 
