@@ -23,8 +23,10 @@ class TokenBearer(HTTPBearer):
             raise HTTPException(status_code=403, detail="Invalid or expired token credentials")
         
         token = creds.credentials
-
+        
         token_data = decode_token(token)
+        
+        print("Decoded token data: ", token_data)
 
         if await token_in_block_list(token_data['jti']):
             raise HTTPException(status_code=403, detail="Invalid or expired token credentials")

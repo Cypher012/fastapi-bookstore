@@ -1,32 +1,83 @@
-from typing import Annotated
+user = [
+  {
+    "first_name": "John",
+    "last_name": "Doe",
+    "username": "jdoe123",
+    "email": "john.doe@example.com",
+    "password": "secureP@ss1"
+  },
+  {
+    "first_name": "Alice",
+    "last_name": "Smith",
+    "username": "alice_s",
+    "email": "alice.smith@example.com",
+    "password": "password123"
+  },
+  {
+    "first_name": "Michael",
+    "last_name": "Johnson",
+    "username": "mjohnson",
+    "email": "michael.johnson@example.com",
+    "password": "M!chael2024"
+  },
+  {
+    "first_name": "Emily",
+    "last_name": "Davis",
+    "username": "emilyd",
+    "email": "emily.davis@example.com",
+    "password": "Em1lyRules"
+  },
+  {
+    "first_name": "Robert",
+    "last_name": "Brown",
+    "username": "rob_brown",
+    "email": "robert.brown@example.com",
+    "password": "Bobby@456"
+  },
+  {
+    "first_name": "Jessica",
+    "last_name": "Wilson",
+    "username": "jesswil",
+    "email": "jessica.wilson@example.com",
+    "password": "Jess!ca007"
+  },
+  {
+    "first_name": "David",
+    "last_name": "Martinez",
+    "username": "d_martinez",
+    "email": "david.martinez@example.com",
+    "password": "Dmart@Secure"
+  },
+  {
+    "first_name": "Sophia",
+    "last_name": "Anderson",
+    "username": "sophiand",
+    "email": "sophia.anderson@example.com",
+    "password": "Sophia@2023"
+  },
+  {
+    "first_name": "William",
+    "last_name": "Taylor",
+    "username": "will_t",
+    "email": "william.taylor@example.com",
+    "password": "TaylorStrong!"
+  },
+  {
+    "first_name": "Olivia",
+    "last_name": "Thomas",
+    "username": "oliviat",
+    "email": "olivia.thomas@example.com",
+    "password": "OliviaPower1"
+  }
+]
 
-def find_max(arr: Annotated[list[int], "The list of numbers to find the maximum"]):
+book = [
   
-    if not arr:  # Check if the array is empty
-      return None
-  
-    max_num = arr[0]  # Initialize max_num with the first element
-    arr2 = []
-    for num in arr:
-      if num > max_num:
-        max_num = num
-      arr2.append(max_num)
-  
-    return max_num,arr2
-
-# Example usage:
-numbers = [10, 5, 20, 8, 30, 15]
-max_value = find_max(numbers)
-print(f"The maximum number is: {max_value}")
+]
 
 
-def greetings(name, age):
-    return f"Hello, {name}, you are {age} years old!"
+from datetime import datetime
 
-profile = {
-    "name": "johndoe",
-    "age": 25,
- }
-
-print(greetings(**profile))
+formatted_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+print("Formatted Time:", formatted_time)
 

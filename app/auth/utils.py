@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from passlib.context import CryptContext
 from datetime import timedelta, datetime
 import jwt
@@ -35,7 +36,6 @@ def create_access_token(user_data: dict, expiry: timedelta = None, refresh: bool
         key=Config.JWT_SECRET,
         algorithm=Config.JWT_ALGORITHM
     )
-
     return token
 
 
@@ -47,6 +47,8 @@ def decode_token(token: str) -> dict:
         algorithms=Config.JWT_ALGORITHM
     )
         return token_data
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token has expired. Please log in again.")
     except jwt.PyJWTError as e:
         logging.exception(e)
         return None
