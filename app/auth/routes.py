@@ -7,7 +7,8 @@ from app.db.main import get_session
 from sqlmodel.ext.asyncio.session import AsyncSession
 from .utils import create_access_token,verify_password
 from fastapi.responses import JSONResponse
-from .dependencies import RefreshTokenBearer
+from .dependencies import RefreshTokenBearer, AccessTokenBearer,get_current_user
+from app.db.redis import add_jti_to_blocklist
 from datetime import datetime
 
 auth_router = APIRouter()
@@ -64,4 +65,18 @@ async def get_new_access_token(token_details = Depends(RefreshTokenBearer())):
         })
     
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or Expired token")
+       
+
+@auth_router.get("/me", response_model=UserResponseModel)
+async def get_current_user(user = Depends(get_current_user)):
+    return user
         
+@auth_router.get("/logout", status_code=status.HTTP_200_OK)
+async def resolve_token(token_details = Depends(AccessTokenBearer())):
+    jti = token_details["jti"]
+    
+    await add_jti_to_blocklist(jti)
+    
+    return {"message": "Logged out sucessfully"}
+    
+
