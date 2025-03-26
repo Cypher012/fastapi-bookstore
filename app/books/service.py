@@ -10,15 +10,22 @@ class BookService:
         result = await session.exec(stmt)
         return result.all()
     
+    async def get_user_books(self,book_id: str ,session: AsyncSession):
+        stmt = select(Book).where(Book.user_id == book_id).order_by(desc(Book.created_at))
+        result = await session.exec(stmt)
+        return result.all()
+    
     async def get_book(self, book_uid: str, session: AsyncSession):
         stmt = select(Book).where(Book.id == book_uid)  
         result = await session.exec(stmt)
         return result.first()
     
-    async def create_book(self, book_data: BookCreateModel, session: AsyncSession):
+    async def create_book(self,book_data: BookCreateModel, user_id: str ,session: AsyncSession):
         new_book = Book(**book_data.model_dump())  
         new_book.published_date = datetime.strptime(book_data.published_date, "%Y-%m-%d")
 
+        new_book.user_id = user_id
+        
         session.add(new_book)
         await session.commit()
         await session.refresh(new_book)

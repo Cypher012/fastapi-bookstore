@@ -1,18 +1,19 @@
 from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 # from app.auth import models
-from .schemas import UserCreateModel, UserResponseModel, UserLogin
+from .schemas import UserCreateModel, UserResponseModel, UserLogin, UserBooksModel
 from .service import UserService
 from app.db.main import get_session
 from sqlmodel.ext.asyncio.session import AsyncSession
 from .utils import create_access_token,verify_password
 from fastapi.responses import JSONResponse
-from .dependencies import RefreshTokenBearer, AccessTokenBearer,get_current_user
+from .dependencies import RefreshTokenBearer, AccessTokenBearer,get_current_user, RoleChecker
 from app.db.redis import add_jti_to_blocklist
 from datetime import datetime
 
 auth_router = APIRouter()
 user_service =  UserService()
+role_checker = RoleChecker(["admin", "user"])
 REFRESH_TOKEN_EXPIRY = 7
 
 @auth_router.post('/register', response_model=UserResponseModel, status_code=status.HTTP_201_CREATED)
@@ -32,7 +33,6 @@ async def login_user(login_date: UserLogin, session: AsyncSession = Depends(get_
     password = login_date.password
 
     user = await user_service.get_user_by_email(email, session)
-    print(user)
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     
@@ -43,6 +43,7 @@ async def login_user(login_date: UserLogin, session: AsyncSession = Depends(get_
     access_token = create_access_token({
         "email": user.email,
         "user_id": str(user.id),
+        "role": user.role
     })
 
     refresh_token = create_access_token({
@@ -67,8 +68,8 @@ async def get_new_access_token(token_details = Depends(RefreshTokenBearer())):
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or Expired token")
        
 
-@auth_router.get("/me", response_model=UserResponseModel)
-async def get_current_user(user = Depends(get_current_user)):
+@auth_router.get("/me", response_model=UserBooksModel)
+async def get_current_user(user = Depends(get_current_user), _: bool = Depends(role_checker)):
     return user
         
 @auth_router.get("/logout", status_code=status.HTTP_200_OK)

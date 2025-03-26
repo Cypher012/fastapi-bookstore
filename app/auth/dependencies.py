@@ -6,6 +6,9 @@ from app.db.main import get_session
 from .utils import decode_token
 from app.db.redis import token_in_block_list
 from .service import UserService
+from dataclasses import dataclass
+from typing import List
+from .models import User
 
 user_service = UserService()
 
@@ -55,8 +58,17 @@ class RefreshTokenBearer(TokenBearer):
             raise HTTPException(status.HTTP_403_FORBIDDEN, detail="Refresh token required, not an access token")
 
 async def get_current_user(token_details=Depends(AccessTokenBearer()), session: AsyncSession=Depends(get_session)):
-    # creturn token_details["user"]
     user_email = token_details["user"]["email"]
     user = await user_service.get_user_by_email(user_email, session)
     return user
     
+
+class RoleChecker:
+    def __init__(self, allowed_roles: List[str]) -> None:
+        self.allowed_roles = allowed_roles
+        
+    def __call__(self, current_user: User = Depends(get_current_user)):
+        if current_user.role not in self.allowed_roles:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You are not authorized to access this resource")
+        return current_user
+      
